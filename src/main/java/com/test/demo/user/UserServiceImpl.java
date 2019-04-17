@@ -1,5 +1,8 @@
 package com.test.demo.user;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.transaction.Transactional;
 
 import com.test.demo.dto.UserDTO;
@@ -20,8 +23,14 @@ public class UserServiceImpl implements UserService {
     private ModelMapper modelMapper;
 
     @Override
+    public List<UserDTO> list() {
+        List<User> users = userRepository.findAll();
+        return users.stream().map(user -> convertToDto(user)).collect(Collectors.toList());
+    }
+
+    @Override
     public UserDTO save(UserDTO userDTO) {
-        User user = convertToEntity(userDTO);        
+        User user = convertToEntity(userDTO);
         User savedUser = userRepository.save(user);
         return convertToDto(savedUser);
     }
